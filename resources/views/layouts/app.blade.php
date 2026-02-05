@@ -11,6 +11,17 @@
         @livewireStyles
     </head>
     <body>
+        <h1>{{ $title }}</h1>
+
+        <nav>
+           @foreach($notes as $note)
+                <div>
+                    <a href="{{route('notes.note', ['note' => $note]) }}">{{ $note->title }}</a>
+                    <p>{{ str()->limit(strip_tags($note->content), 150) }}
+                </div>
+           @endforeach
+        </nav>
+
         {{ $slot }}
 
         @livewireScripts

@@ -39,7 +39,8 @@ class NoteSeeder extends Seeder
             <p>It was deliberately inspired by the default style browsers apply to plaintext as well as the ways man files format their text to look legible. (I'm a huge fan of man files, but that's a story for another time).</p>
 
             <p>If you decide to use it for something, don't hesitate to send me <a href="mailto:hello@theoo.dev">a little email</a> ^^ I'll be super pleased to look at what you wrote with it.</p>
-            EOF
+            EOF,
+            'published_at' => now(),
         ]);
     }
 }
