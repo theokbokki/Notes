@@ -34,6 +34,7 @@ new #[Layout('layouts::auth')] class extends Component
 ?>
 
 <div class="auth">
+    <h1>Login</h1>
     <form wire:submit="onSubmit">
         <div>
             <label for="email">Email</label>
