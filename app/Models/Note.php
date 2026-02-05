@@ -14,6 +14,8 @@ class Note extends Model
     use SoftDeletes;
     use HasSlug;
 
+    protected $guarded = [];
+
     public function getSlugOptions(): SlugOptions
     {
         return SlugOptions::create()

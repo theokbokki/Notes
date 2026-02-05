@@ -20,5 +20,9 @@ new class extends Component
 ?>
 
 <div>
-    {!! $note->content !!}
+    @auth()
+        <livewire:editor wire:model="content" wire:poll="autosave" :$note/>
+    @else
+        {!! $note->content !!}
+    @endauth
 </div>
