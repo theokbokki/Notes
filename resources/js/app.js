@@ -4,13 +4,13 @@ import StarterKit from "@tiptap/starter-kit";
 import FileHandler from "@tiptap/extension-file-handler";
 import Image from "@tiptap/extension-image";
 
-window.setupEditor = function (content) {
+window.setupEditor = function (content, element) {
     let editor;
 
     return {
         content,
 
-        initialize(element) {
+        init() {
             editor = new Editor({
                 element,
                 extensions: [

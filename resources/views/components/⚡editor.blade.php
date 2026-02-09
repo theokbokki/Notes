@@ -52,8 +52,7 @@ new class extends Component
 ?>
 
 <div
-    x-data="setupEditor($wire.entangle('{{ $attributes->wire('model')->value() }}'))"
-    x-init="() => initialize($refs.editor)"
+    x-data="setupEditor($wire.entangle('{{ $attributes->wire('model')->value() }}'), $refs.editor)"
     wire:ignore
     {{ $attributes->whereDoesntStartWith('wire:model') }}
 >
