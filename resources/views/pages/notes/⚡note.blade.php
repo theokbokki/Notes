@@ -13,7 +13,6 @@ new class extends Component
     {
         return $this->view()->layout('layouts::app', [
             'title' => $this->note->title,
-            'notes' => auth()->check() ? Note::all() : Note::published()->get(),
         ]);
     }
 };

@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('notes', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->string('slug');
-            $table->text('content');
-            $table->timestamp('published_at');
+            $table->string('title')->nullable();
+            $table->string('slug')->nullable()->unique();
+            $table->text('content')->default('');
+            $table->timestamp('published_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
