@@ -1,8 +1,8 @@
 <?php
 
 use App\Models\Note;
-use Illuminate\Database\Eloquent\Collection;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 new class extends Component
@@ -22,6 +22,12 @@ new class extends Component
         unset($this->notes);
 
         return $this->redirect(route('notes.note', ['note' => $note]), navigate: true);
+    }
+    
+    #[On('editor-content-updated')]
+    public function handleNoteUpdate()
+    {
+        unset($this->notes);
     }
 };
 ?>

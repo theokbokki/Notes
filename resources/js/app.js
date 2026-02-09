@@ -6,6 +6,7 @@ import Image from "@tiptap/extension-image";
 
 window.setupEditor = function (content, element) {
     let editor;
+    let saveTimeout = null;
 
     return {
         content,
@@ -24,16 +25,16 @@ window.setupEditor = function (content, element) {
                             "image/webp",
                         ],
 
-                        onDrop: (currentEditor, files, pos) => {
-                            files.forEach((file) => {
+                        onDrop: (editor, files, pos) => {
+                            files.forEach(file => {
                                 this.uploadImage(file, pos);
                             });
                         },
 
-                        onPaste: (currentEditor, files, htmlContent) => {
-                            if (htmlContent) return;
+                        onPaste: (editor, files, html) => {
+                            if (html) return;
 
-                            files.forEach((file) => {
+                            files.forEach(file => {
                                 this.uploadImage(file);
                             });
                         },
@@ -43,13 +44,18 @@ window.setupEditor = function (content, element) {
                 content: this.content,
 
                 onUpdate: ({ editor }) => {
-                    this.content = editor.getHTML();
+                    const html = editor.getHTML();
+
+                    clearTimeout(saveTimeout);
+
+                    saveTimeout = setTimeout(() => {
+                        this.content = html;
+                        this.$wire.saveContent(html);
+                    }, 500);
                 },
             });
 
             this.$wire.on("editor-image-uploaded", ({ url, pos }) => {
-                if (!editor) return;
-
                 const insertPos = pos ?? editor.state.selection.anchor;
 
                 editor
@@ -60,12 +66,6 @@ window.setupEditor = function (content, element) {
                     })
                     .focus()
                     .run();
-            });
-
-            this.$watch("content", (value) => {
-                if (value === editor.getHTML()) return;
-
-                editor.commands.setContent(value, false);
             });
         },
 

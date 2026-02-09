@@ -4,10 +4,10 @@ use App\Models\Note;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManager;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Str;
+use Livewire\Attributes\Validate;
 
 new class extends Component
 {
@@ -25,11 +25,19 @@ new class extends Component
         $this->content = $this->note->content;
     }
 
-    public function autosave()
+    public function saveContent(string $content)
     {
+        if ($content === $this->note->content) {
+            return;
+        }
+
+        $this->content = $content;
+
         $this->note->update([
-            'content' => $this->content,
+            'content' => $content,
         ]);
+
+        $this->dispatch('editor-content-updated');
     }
 
     public function processImage($pos = null)
@@ -52,9 +60,8 @@ new class extends Component
 ?>
 
 <div
-    x-data="setupEditor($wire.entangle('{{ $attributes->wire('model')->value() }}'), $refs.editor)"
+    x-data="setupEditor(@js($content), $refs.editor)"
     wire:ignore
-    {{ $attributes->whereDoesntStartWith('wire:model') }}
 >
     <div x-ref="editor"></div>
 </div>
