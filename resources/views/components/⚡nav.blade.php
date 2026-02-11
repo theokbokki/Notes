@@ -23,7 +23,7 @@ new class extends Component
 
         return $this->redirect(route('notes.note', ['note' => $note]), navigate: true);
     }
-    
+
     #[On('editor-content-updated')]
     public function handleNoteUpdate()
     {
@@ -32,18 +32,17 @@ new class extends Component
 };
 ?>
 
-<nav>
+<nav class="nav">
+    <h2 class="sro">Main nav</h2>
     @auth()
-        <div>
-            <button wire:click="createNote">Create Note</button>
-        </div>
+        <button class="nav__create" wire:click="createNote">Create Note</button>
     @endauth
-    <div>
+    <ul class="nav__list">
         @foreach($this->notes as $note)
-            <div>
-                <a href="{{route('notes.note', ['note' => $note]) }}">{{ $note->title }}</a>
-                <p>{{ str()->limit(strip_tags($note->content), 150) }}
-            </div>
+            <li class="nav__item">
+                <a class="nav__link" href="{{route('notes.note', ['note' => $note]) }}">{{ $note->title }}</a>
+                <p class="nav__description">{{ str()->limit(strip_tags($note->content), 150) }}</p>
+            </li>
         @endforeach
-    </div>
+    </ul>
 </nav>

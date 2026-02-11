@@ -36,17 +36,19 @@ new class extends Component
 };
 ?>
 
-<div>
-    <h1 class="{{ when(auth()->check(), 'sro') }}">{{ $title }}</h1>
+<div class="note">
+    <h1 class="note__title {{ when(auth()->check(), 'sro') }}">{{ $title }}</h1>
     @auth()
-        <input type="text" wire:model.live.debounce.500ms="title" />
+        <input type="text" wire:model.live.debounce.500ms="title" class="note__title note__title--edit" />
     @endauth
 
     <livewire:nav />
 
-    @auth()
-        <livewire:editor wire:model="content" :$note/>
-    @else
-        {!! $note->content !!}
-    @endauth
+    <div class="note__content">
+        @auth()
+            <livewire:editor wire:model="content" :$note/>
+        @else
+            {!! $note->content !!}
+        @endauth
+    </div>
 </div>
