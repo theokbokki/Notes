@@ -1,0 +1,9 @@
+.editor {
+    width: 100%;
+    border: none;
+    resize: none;
+
+    &:focus {
+        outline: none;
+    }
+}

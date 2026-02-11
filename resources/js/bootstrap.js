@@ -1,4 +1,10 @@
 import axios from 'axios';
-window.axios = axios;
+import { Livewire, Alpine } from '../../vendor/livewire/livewire/dist/livewire.esm';
+import resize from '@alpinejs/resize'
 
+window.axios = axios;
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
+Alpine.plugin(resize);
+
+Livewire.start();

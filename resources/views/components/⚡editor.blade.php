@@ -1,5 +1,4 @@
-<?php
-
+{{--
 use App\Models\Note;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
@@ -57,11 +56,58 @@ new class extends Component
         );
     }
 };
-?>
 
 <div
     x-data="setupEditor(@js($content), $refs.editor)"
     wire:ignore
 >
     <div x-ref="editor"></div>
-</div>
+</div> --}}
+
+
+<?php
+
+use App\Models\Note;
+use Livewire\Component;
+
+new class extends Component
+{
+    public Note $note;
+
+    public string $content = '';
+
+    public function mount()
+    {
+        $this->content = $this->note->content;
+    }
+
+    public function updatedContent()
+    {
+        if ($this->content === $this->note->content) return;
+
+        $this->note->update(['content' => $this->content ?? '']);
+    }
+}
+
+?>
+
+<textarea
+    x-data="{
+        resize() {
+            const scrollTop = window.pageYOffset;
+            this.$el.style.height = 'auto';
+            this.$el.style.height = this.$el.scrollHeight + 'px';
+            window.scrollTo({ top: scrollTop });
+        },
+
+        onInput() {
+            this.resize();
+            $wire.$set('content', $el.value);
+        }
+    }"
+    x-init="resize()"
+    @input.debounce.500ms="onInput()"
+    x-resize.document="resize()"
+    class="editor"
+    wire:ignore
+>{{ $content }}</textarea>
