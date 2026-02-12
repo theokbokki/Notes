@@ -69,12 +69,22 @@ new class extends Component
 
 use App\Models\Note;
 use Livewire\Component;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\ImageManager;
+use Illuminate\Support\Str;
+use Livewire\WithFileUploads;
+use Livewire\Attributes\Validate;
 
 new class extends Component
 {
+    use WithFileUploads;
+
     public Note $note;
 
     public string $content = '';
+
+    public $image;
 
     public function mount()
     {
@@ -86,6 +96,19 @@ new class extends Component
         if ($this->content === $this->note->content) return;
 
         $this->note->update(['content' => $this->content ?? '']);
+    }
+
+    public function processImage()
+    {
+        $filename = Str::uuid().'.webp';
+        File::ensureDirectoryExists(Storage::disk('public')->path('images'));
+        $path = Storage::disk('public')->path('images/'.$filename);
+
+        $manager = ImageManager::gd();
+        $image = $manager->read($this->image->getRealPath());
+        $image->scale(width: 1040)->encodeByExtension('webp', 85)->save($path);
+
+        $this->dispatch('image-uploaded', url: Storage::url('images/'.$filename));
     }
 }
 
@@ -103,10 +126,55 @@ new class extends Component
         onInput() {
             this.resize();
             $wire.$set('content', $el.value);
+        },
+
+        async onPaste(e) {
+            const start = this.$el.selectionStart;
+            const end = this.$el.selectionEnd;
+
+            const contents = await navigator.clipboard.read();
+
+            for (const item of contents) {
+                if (!item.types.includes('image/png')) {
+                    const blob = await item.getType('text/plain');
+                    const text = await blob.text();
+
+                    this.$el.value = this.$el.value.slice(0, start) + text + this.$el.value.slice(end);
+
+                    const newPos = start + text.length;
+                    this.$el.setSelectionRange(newPos, newPos);
+
+                    this.onInput();
+                    return;
+                }
+
+                const blob = await item.getType('image/png');
+                const file = new File([blob], 'pasted.png', { type: 'image/png' });
+
+                this.$wire.upload('image', file, () => {
+                    this.$wire.call('processImage');
+                });
+            }
+        },
+
+        onImageUploaded(url) {
+            const pos = this.$el.selectionStart;
+
+            const markdown = `![image](${url})`;
+
+            this.$el.value =
+            this.$el.value.slice(0, pos) + markdown + this.$el.value.slice(pos);
+
+            const newPos = pos + markdown.length;
+            this.$el.setSelectionRange(newPos, newPos);
+
+            this.onInput();
         }
     }"
     x-init="resize()"
     @input.debounce.500ms="onInput()"
+    @paste.prevent="onPaste($event)"
+    @image-uploaded="onImageUploaded($event.detail.url)"
     x-resize.document="resize()"
     class="editor"
     wire:ignore

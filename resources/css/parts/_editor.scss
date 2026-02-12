@@ -1,7 +1,14 @@
+@use "../utils" as *;
+
 .editor {
     width: 100%;
     border: none;
     resize: none;
+    font-family: var(--font-mono);
+    font-size: rem(16);
+    line-height: 175%;
+    background: #fafaf9;
+    color: #44403B;
 
     &:focus {
         outline: none;

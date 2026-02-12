@@ -1,17 +1,27 @@
 @use "../utils" as *;
 
 .note {
-    display: flex;
-    flex-direction: column;
-    padding: rem(20);
+    max-width: 80ch;
+    padding: rem(40) min(5vw, rem(40));
+    font-size: rem(18);
+    font-family: var(--font-serif);
+    color: #44403B;
+
+    p {
+        line-height: 150%;
+    }
 
     &__title {
-        margin-top: rem(40);
-        font-size: rem(20);
-        width: 100%;
+        display: block;
+        font-size: rem(32);
+        margin: 0;
+        font-weight: bold;
 
         &--edit {
+            font-family: var(--font-mono);
             border: none;
+            background: #fafaf9;
+            color: #44403B;
 
             &:focus {
                 outline: none;
@@ -20,107 +30,8 @@
     }
 
     &__content {
-        /* Headings */
-        h2, h3, h4, h5, h6 {
-            margin-top: 1rem;
-            text-transform: uppercase;
-        }
-
-        /* Paragraphs */
-        p {
-            margin-top: 1rem;
-        }
-
-        /* Blockquotes */
-        blockquote {
-            margin: 1rem 0 0rem 4ch;
-            position: relative;
-        }
-
-        blockquote:before {
-            content: '"';
-            position: absolute;
-            left: -2ch;
-        }
-
-        /* Lists */
-        ul, ol {
-            margin: .25rem 0 1rem;
-        }
-
-        li {
-            position: relative;
-            margin-left: 4ch;
-        }
-
-        li:before {
-            position: absolute;
-        }
-
-        ul li::before {
-            content: "- ";
-            left: -2ch;
-        }
-
-        ol {
-            counter-reset: count;
-        }
-
-        ol li {
-            counter-increment: count;
-        }
-
-        ol li::before {
-            content: counter(count) ". ";
-            left: -2.5ch;
-        }
-
-        /* Images */
         img {
-            display: block;
-            margin-top: 1rem;
-            width: 100%;
+            width: min(100%, rem(540));
         }
-
-        /* Code blocks */
-        pre {
-            margin-left: 4ch;
-        }
-
-        pre:before,
-        pre:after {
-            content: "---";
-            display: block;
-        }
-
-        pre code:before,
-        pre code:after {
-            content: unset;
-        }
-
-        /* Inline code */
-        code:before,
-        code:after {
-            content: "`";
-        }
-
-        /* Horizontal rule */
-        hr {
-            border: none;
-        }
-
-        hr:before {
-            content: "---";
-        }
-
-        /* Inline formatting */
-        em {
-            font-style: italic;
-        }
-
-        strong {
-            font-weight: bold;
-        }
-
     }
 }

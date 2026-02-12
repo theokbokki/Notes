@@ -27,6 +27,18 @@ new class extends Component
         return $this->redirect(route('notes.note', ['note' => $this->note]), navigate: true);
     }
 
+
+    public function createNote()
+    {
+        $note = Note::create([
+            'title' => 'New note',
+        ]);
+
+        unset($this->notes);
+
+        return $this->redirect(route('notes.note', ['note' => $note]), navigate: true);
+    }
+
     public function render()
     {
         return $this->view()->layout('layouts::app', [
@@ -40,15 +52,19 @@ new class extends Component
     <h1 class="note__title {{ when(auth()->check(), 'sro') }}">{{ $title }}</h1>
     @auth()
         <input type="text" wire:model.live.debounce.500ms="title" class="note__title note__title--edit" />
-    @endauth
+        <button class="nav__create" wire:click="createNote">Create Note</button>
 
-    <livewire:nav />
+    @endauth
 
     <div class="note__content">
         @auth()
             <livewire:editor wire:model="content" :$note/>
         @else
-            {!! $note->content !!}
+            {!! str()->markdown($note->content) !!}
         @endauth
     </div>
+
+    <hr>
+
+    <livewire:nav />
 </div>
