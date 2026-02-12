@@ -9,6 +9,8 @@ new class extends Component
 
     public string $title = '';
 
+    public bool $format = false;
+
     public function mount()
     {
         if ((! auth()->check()) && $this->note->published_at === null) {
@@ -52,6 +54,11 @@ new class extends Component
         $this->note->save();
     }
 
+    public function toggleFormat()
+    {
+        $this->format = !$this->format;
+    }
+
     public function render()
     {
         return $this->view()->layout('layouts::app', [
@@ -84,16 +91,18 @@ new class extends Component
             @input.debounce.500ms="onInput()"
             class="note__title note__title--edit"
         >{{ $title }}</textarea>
+
         <button class="note__button" wire:click="createNote">Create Note</button>
         <button class="note__button" wire:click="togglePublish">{{ $note->published_at === null ? 'Publish' : 'Unpublish' }}</button>
+        <button class="note__button" wire:click="toggleFormat">{{ $format ? 'Show editor' : 'Show formatted' }}</button>
     @endauth
 
     <div class="note__content">
-        @auth()
+        @if(auth()->check() && !$format)
             <livewire:editor wire:model="content" :$note/>
         @else
             {!! str()->markdown($note->content) !!}
-        @endauth
+        @endif
     </div>
 
     <hr>
