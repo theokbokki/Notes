@@ -31,6 +31,6 @@ class Note extends Model
     #[Scope]
     protected function published(Builder $query): void
     {
-        $query->where('published_at', '<', now());
+        $query->whereNotNull('published_at');
     }
 }

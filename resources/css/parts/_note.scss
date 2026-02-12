@@ -1,7 +1,7 @@
 @use "../utils" as *;
 
 .note {
-    max-width: 80ch;
+    max-width: 65ch;
     padding: rem(40) min(5vw, rem(40));
     font-size: rem(18);
     font-family: var(--font-serif);

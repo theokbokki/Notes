@@ -11,6 +11,10 @@ new class extends Component
 
     public function mount()
     {
+        if ((! auth()->check()) && $this->note->published_at === null) {
+            abort(404);
+        }
+
         $this->title = $this->note->title;
     }
 
@@ -39,6 +43,15 @@ new class extends Component
         return $this->redirect(route('notes.note', ['note' => $note]), navigate: true);
     }
 
+    public function togglePublish()
+    {
+        $this->note->published_at === null
+            ? $this->note->published_at = now()
+            : $this->note->published_at = null;
+
+        $this->note->save();
+    }
+
     public function render()
     {
         return $this->view()->layout('layouts::app', [
@@ -53,7 +66,7 @@ new class extends Component
     @auth()
         <input type="text" wire:model.live.debounce.500ms="title" class="note__title note__title--edit" />
         <button class="nav__create" wire:click="createNote">Create Note</button>
-
+        <button class="nav__create" wire:click="togglePublish">{{ $note->published_at === null ? 'Publish' : 'Unpublish' }}</button>
     @endauth
 
     <div class="note__content">

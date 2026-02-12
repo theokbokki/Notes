@@ -13,7 +13,11 @@ Route::fallback(fn () => fallback());
 
 function fallback()
 {
-    if ($note = Note::latest()->first()) {
+    if (auth()->check()) {
+        return redirect()->route('notes.note', Note::latest()->first());
+    }
+
+    if ($note = Note::published()->latest()->first()) {
         return redirect()->route('notes.note', $note);
     }
 

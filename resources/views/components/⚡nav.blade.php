@@ -16,7 +16,7 @@ new class extends Component
 ?>
 
 <nav class="nav">
-    <h2>My other notes</h2>
+    <h2>All my notes</h2>
 
     <ul class="nav__list">
         @foreach($this->notes as $note)
