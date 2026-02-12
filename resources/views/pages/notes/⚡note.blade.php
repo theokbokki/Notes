@@ -12,7 +12,7 @@ new class extends Component
     public function mount()
     {
         if ((! auth()->check()) && $this->note->published_at === null) {
-            abort(404);
+            return redirect('/');
         }
 
         $this->title = $this->note->title;
@@ -64,9 +64,28 @@ new class extends Component
 <div class="note">
     <h1 class="note__title {{ when(auth()->check(), 'sro') }}">{{ $title }}</h1>
     @auth()
-        <input type="text" wire:model.live.debounce.500ms="title" class="note__title note__title--edit" />
-        <button class="nav__create" wire:click="createNote">Create Note</button>
-        <button class="nav__create" wire:click="togglePublish">{{ $note->published_at === null ? 'Publish' : 'Unpublish' }}</button>
+        <textarea
+            x-data="{
+                resize() {
+                    const scrollTop = window.pageYOffset;
+                    this.$el.style.height = 'auto';
+                    this.$el.style.height = this.$el.scrollHeight + 'px';
+                    window.scrollTo({ top: scrollTop });
+                },
+
+                onInput() {
+                    this.resize();
+                    $wire.$set('title', $el.value);
+                },
+            }"
+            x-init="resize()"
+            x-resize.document="resize()"
+            wire:ignore
+            @input.debounce.500ms="onInput()"
+            class="note__title note__title--edit"
+        >{{ $title }}</textarea>
+        <button class="note__button" wire:click="createNote">Create Note</button>
+        <button class="note__button" wire:click="togglePublish">{{ $note->published_at === null ? 'Publish' : 'Unpublish' }}</button>
     @endauth
 
     <div class="note__content">

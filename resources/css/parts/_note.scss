@@ -11,13 +11,22 @@
         line-height: 150%;
     }
 
+    &__button {
+        margin-top: rem(24);
+        margin-bottom: rem(24);
+    }
+
     &__title {
         display: block;
-        font-size: rem(32);
+        font-size: rem(36);
         margin: 0;
         font-weight: bold;
 
         &--edit {
+            width: 100%;
+            border: none;
+            resize: none;
+            font-size: rem(16);
             font-family: var(--font-mono);
             border: none;
             background: #fafaf9;
@@ -32,6 +41,11 @@
     &__content {
         img {
             width: min(100%, rem(540));
+        }
+
+        code, pre {
+            font-family: var(--font-mono);
+            font-size: rem(16);
         }
     }
 }

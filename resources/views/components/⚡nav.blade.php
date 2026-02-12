@@ -2,7 +2,6 @@
 
 use App\Models\Note;
 use Livewire\Attributes\Computed;
-use Livewire\Attributes\On;
 use Livewire\Component;
 
 new class extends Component
@@ -21,7 +20,7 @@ new class extends Component
     <ul class="nav__list">
         @foreach($this->notes as $note)
             <li class="nav__item">
-                <a class="nav__link" href="{{route('notes.note', ['note' => $note]) }}">{{ $note->title }}</a>
+                <p><a class="nav__link" href="{{route('notes.note', ['note' => $note]) }}">{{ $note->title }}</a></p>
             </li>
         @endforeach
     </ul>
