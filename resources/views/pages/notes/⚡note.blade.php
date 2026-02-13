@@ -29,8 +29,6 @@ new class extends Component
         $this->note->update([
             'title' => $this->title ?? '',
         ]);
-
-        return $this->redirect(route('notes.note', ['note' => $this->note]), navigate: true);
     }
 
 
