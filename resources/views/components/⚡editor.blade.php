@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManager;
 use Illuminate\Support\Str;
 use Livewire\WithFileUploads;
-use Livewire\Attributes\Validate;
 
 new class extends Component
 {

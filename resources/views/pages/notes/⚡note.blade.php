@@ -11,6 +11,8 @@ new class extends Component
 
     public bool $format = false;
 
+    public bool $deleteCheck = false;
+
     public function mount()
     {
         if ((! auth()->check()) && $this->note->published_at === null) {
@@ -41,6 +43,19 @@ new class extends Component
         unset($this->notes);
 
         return $this->redirect(route('notes.note', ['note' => $note]), navigate: true);
+    }
+
+    public function deleteNote()
+    {
+        if (!$this->deleteCheck) {
+            $this->deleteCheck = true;
+            $this->dispatch('reset-delete-check');
+
+            return;
+        }
+
+        $this->note->delete();
+        $this->deleteCheck = false;
     }
 
     public function togglePublish()
@@ -94,6 +109,13 @@ new class extends Component
             <button class="note__button" wire:click="createNote">Create Note</button>
             <button class="note__button" wire:click="togglePublish">{{ $note->published_at === null ? 'Publish' : 'Unpublish' }}</button>
             <button class="note__button" wire:click="toggleFormat">{{ $format ? 'Show editor' : 'Show formatted' }}</button>
+            <button
+                class="note__button note__button--danger"
+                wire:click="deleteNote"
+                @reset-delete-check.window="setTimeout(() => $wire.set('deleteCheck', false), 3000)"
+            >
+                {{ $deleteCheck ? 'You sure?' : 'Delete' }}
+            </button>
         </div>
     @endauth
 
