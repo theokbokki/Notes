@@ -1,0 +1,81 @@
+@use "../utils" as *;
+
+.backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    animation: day-progress-back 86400s linear infinite;
+    animation-delay: var(--offset);
+
+    &:after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: url("../../images/noise.webp");
+        opacity: .025;
+    }
+
+    &__window {
+        position: absolute;
+        width: rem(900);
+        height: rem(723);
+        transform: rotate(-5deg);
+        filter: blur(rem(10));
+        z-index: -1;
+
+        &--right {
+            right: rem(-105);
+            top: 5vh;
+            animation: window-color-shadow 86400s linear infinite;
+            animation-delay: var(--offset);
+        }
+
+        &--left {
+            right: rem(822);
+            top: calc(5vh + rem(85));
+            animation: window-color-shadow 86400s linear infinite;
+            animation-delay: var(--offset);
+        }
+    }
+
+    &__leaves {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        filter: blur(rem(15));
+    }
+
+    &__leaf {
+        position: absolute;
+        width: rem(80);
+        height: rem(80);
+        border-radius: 0 rem(70);
+        transform: rotate(var(--r));
+        animation: leaf-sway var(--sway-duration) ease-in-out infinite alternate,
+                   day-progress-back 86400s linear infinite;
+        animation-delay: var(--sway-delay), var(--offset);
+    }
+}
+
+@keyframes day-progress-back {
+    0%   { background-color: #1D2030; }
+    12%  { background-color: #434A70; }
+    25%  { background-color: #ECE4DF; }
+    50%  { background-color: #F3F1EC; }
+    75%  { background-color: #CFBCB0; }
+    100% { background-color: #1D2030; }
+}
+
+@keyframes window-color-shadow {
+    0%   { background-color: #2E3247; box-shadow: 0 0 rem(20) rem(20) inset #1D2030; }
+    12%  { background-color: #575E85; box-shadow: 0 0 rem(20) rem(20) inset #434A70; }
+    25%  { background-color: #FBF1EA; box-shadow: 0 0 rem(20) rem(20) inset #ECE4DF; }
+    50%  { background-color: #FDFBF7; box-shadow: 0 0 rem(20) rem(20) inset #F3F1EC; }
+    75%  { background-color: #F6E2D5; box-shadow: 0 0 rem(20) rem(20) inset #CFBCB0; }
+    100% { background-color: #2E3247; box-shadow: 0 0 rem(20) rem(20) inset #1D2030; }
+}
+
+@keyframes leaf-sway {
+    from { transform: rotate(var(--r)) translateX(0); }
+    to   { transform: rotate(var(--r)) translateX(var(--sway-distance)); }
+}

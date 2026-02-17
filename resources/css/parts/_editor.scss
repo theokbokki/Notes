@@ -7,8 +7,9 @@
     font-family: var(--font-mono);
     font-size: rem(16);
     line-height: 175%;
-    background: #fafaf9;
-    color: #44403B;
+    background: transparent;
+    animation: day-progress-front 86400s steps(1, end) infinite;
+    animation-delay: var(--offset);
 
     &:focus {
         outline: none;

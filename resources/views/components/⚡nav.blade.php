@@ -20,7 +20,7 @@ new class extends Component
     <ul class="nav__list">
         @foreach($this->notes as $note)
             <li class="nav__item">
-                <p><a class="nav__link" href="{{route('notes.note', ['note' => $note]) }}">{{ $note->title }}</a></p>
+                <a class="nav__link" href="{{route('notes.note', ['note' => $note]) }}">{{ $note->title }}</a>
             </li>
         @endforeach
     </ul>

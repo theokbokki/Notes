@@ -90,9 +90,11 @@ new class extends Component
             class="note__title note__title--edit"
         >{{ $title }}</textarea>
 
-        <button class="note__button" wire:click="createNote">Create Note</button>
-        <button class="note__button" wire:click="togglePublish">{{ $note->published_at === null ? 'Publish' : 'Unpublish' }}</button>
-        <button class="note__button" wire:click="toggleFormat">{{ $format ? 'Show editor' : 'Show formatted' }}</button>
+        <div class="note__buttons">
+            <button class="note__button" wire:click="createNote">Create Note</button>
+            <button class="note__button" wire:click="togglePublish">{{ $note->published_at === null ? 'Publish' : 'Unpublish' }}</button>
+            <button class="note__button" wire:click="toggleFormat">{{ $format ? 'Show editor' : 'Show formatted' }}</button>
+        </div>
     @endauth
 
     <div class="note__content">

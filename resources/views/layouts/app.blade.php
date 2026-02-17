@@ -10,8 +10,14 @@
 
         @livewireStyles
     </head>
-    <body>
+    <body style="--offset: {{ now('Europe/Brussels')->diffInSeconds(now('Europe/Brussels')->startOfDay()) }}s">
         {{ $slot }}
+
+        <div class="backdrop">
+            <div class="backdrop__window backdrop__window--left"></div>
+            <div class="backdrop__window backdrop__window--right"></div>
+            <div class="backdrop__leaves"></div>
+        <div>
 
         @livewireScriptConfig
     </body>

@@ -2,35 +2,49 @@
 
 .note {
     max-width: 65ch;
-    padding: rem(40) min(5vw, rem(40));
-    font-size: rem(18);
-    font-family: var(--font-serif);
-    color: #44403B;
+    padding: 0 rem(20);
+    margin: rem(40) auto;
+    font-size: rem(16);
+    font-family: var(--font-mono);
+    line-height: 175%;
+    animation: day-progress-front 86400s steps(1, end) infinite;
+    animation-delay: var(--offset);
 
-    p {
-        line-height: 150%;
+    &__buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: rem(8);
+        margin: rem(24) 0;
     }
 
     &__button {
-        margin-top: rem(24);
-        margin-bottom: rem(24);
+        background: black;
+        color: white;
+        padding: rem(10) rem(16);
+        border-radius: rem(8);
+        border: none;
+
+        &:hover {
+            cursor: pointer;
+        }
+
+        &:active {
+            transform: scale(0.95);
+        }
     }
 
     &__title {
         display: block;
-        font-size: rem(36);
-        margin: 0;
-        font-weight: bold;
 
         &--edit {
             width: 100%;
             border: none;
             resize: none;
-            font-size: rem(16);
             font-family: var(--font-mono);
             border: none;
-            background: #fafaf9;
-            color: #44403B;
+            background: transparent;
+            animation: day-progress-front 86400s steps(1, end) infinite;
+            animation-delay: var(--offset);
 
             &:focus {
                 outline: none;
@@ -38,14 +52,200 @@
         }
     }
 
-    &__content {
-        img {
-            width: min(100%, rem(540));
-        }
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        margin-top: 1rem;
+        text-transform: uppercase;
+    }
 
-        code, pre {
-            font-family: var(--font-mono);
-            font-size: rem(16);
+    p {
+        margin-top: 1rem;
+    }
+
+    a {
+        animation: day-progress-front 86400s steps(1, end) infinite;
+        animation-delay: var(--offset);
+        text-underline-offset: 2px;
+
+        &:hover {
+            opacity: 50%;
         }
+    }
+
+    blockquote {
+        margin: 1rem 0 0rem 4ch;
+        position: relative;
+    }
+
+    blockquote:before {
+        content: '"';
+        position: absolute;
+        left: -2ch;
+    }
+
+    ul,
+    ol {
+        margin: 0.25rem 0 1rem;
+    }
+
+    li {
+        position: relative;
+        margin-left: 4ch;
+
+        + li {
+            margin-top: 1rem;
+        }
+    }
+
+    li:before {
+        position: absolute;
+    }
+
+    ul li::before {
+        content: "- ";
+        left: -2ch;
+    }
+
+    ol {
+        counter-reset: count;
+    }
+
+    ol li {
+        counter-increment: count;
+    }
+
+    ol li::before {
+        content: counter(count) ". ";
+        left: -2.5ch;
+    }
+
+    img {
+        display: block;
+        margin-top: 1rem;
+        width: min(100%, rem(540));
+    }
+
+    pre {
+        margin-left: 4ch;
+    }
+
+    pre:before,
+    pre:after {
+        content: "---";
+        display: block;
+    }
+
+    pre code:before,
+    pre code:after {
+        content: unset;
+    }
+
+    code:before,
+    code:after {
+        content: "`";
+    }
+
+    hr {
+        border: none;
+    }
+
+    hr:before {
+        content: "---";
+        animation: day-progress-front 86400s steps(1, end) infinite;
+        animation-delay: var(--offset);
+    }
+
+    em {
+        font-style: italic;
+    }
+
+    strong {
+        font-weight: bold;
+    }
+
+    @media screen and (min-width: rem(990)) {
+        padding: rem(80) rem(120);
+    }
+}
+
+@keyframes day-progress-front {
+    0% {
+        color: #a9acc8;
+    }
+    4% {
+        color: #babed6;
+    }
+    8% {
+        color: #d1d4e4;
+    }
+    12% {
+        color: #fafafc;
+    }
+    17% {
+        color: #1f2026;
+    }
+    21% {
+        color: #2e2c32;
+    }
+    25% {
+        color: #5e4539;
+    }
+    29% {
+        color: #5b4637;
+    }
+    33% {
+        color: #584535;
+    }
+    37% {
+        color: #5a4836;
+    }
+    42% {
+        color: #594a36;
+    }
+    46% {
+        color: #5a4d38;
+    }
+    50% {
+        color: #595038;
+    }
+    54% {
+        color: #574834;
+    }
+    58% {
+        color: #554433;
+    }
+    62% {
+        color: #4d3c2e;
+    }
+    67% {
+        color: #4a392c;
+    }
+    71% {
+        color: #43352a;
+    }
+    75% {
+        color: #3a2d24;
+    }
+    79% {
+        color: #1a1615;
+    }
+    83% {
+        color: #211e1d;
+    }
+    87% {
+        color: #f2f1f2;
+    }
+    92% {
+        color: #f4f3f4;
+    }
+    96% {
+        color: #d2d1d8;
+    }
+    100% {
+        color: #a9acc8;
     }
 }
