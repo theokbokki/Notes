@@ -3,7 +3,8 @@ import { Livewire, Alpine } from '../../vendor/livewire/livewire/dist/livewire.e
 import resize from '@alpinejs/resize'
 
 import.meta.glob([
-  '../images/**',
+    '../images/**',
+    '../favicons/**',
 ]);
 
 window.axios = axios;
