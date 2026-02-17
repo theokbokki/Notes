@@ -12,14 +12,22 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory()->create([
-            'name' => 'Théo',
-            'email' => 'hello@theoo.dev',
-            'password' => bcrypt('change_this'),
-        ]);
+        if (app()->env() === 'production') {
+            User::factory()->create([
+                'name' => 'Théo',
+                'email' => 'hello@theoo.dev',
+                'password' => env('MASTER_PASSWORD'),
+            ]);
+        } else{
+            User::factory()->create([
+                'name' => 'Théo',
+                'email' => 'hello@theoo.dev',
+                'password' => bcrypt('change_this'),
+            ]);
 
-        $this->call([
-            NoteSeeder::class,
-        ]);
+            $this->call([
+                NoteSeeder::class,
+            ]);
+        }
     }
 }
