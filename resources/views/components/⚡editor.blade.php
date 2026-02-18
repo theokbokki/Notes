@@ -64,28 +64,31 @@ new class extends Component
             const start = this.$el.selectionStart;
             const end = this.$el.selectionEnd;
 
-            const contents = await navigator.clipboard.read();
+            const items = e.clipboardData.items;
 
-            for (const item of contents) {
-                if (!item.types.includes('image/png')) {
-                    const blob = await item.getType('text/plain');
-                    const text = await blob.text();
+            for (const item of items) {
+                if (item.type && item.type.startsWith('image/')) {
+                    const blob = item.getAsFile();
+                    if (!blob) break;
 
-                    this.$el.value = this.$el.value.slice(0, start) + text + this.$el.value.slice(end);
+                    const file = new File([blob], 'pasted-image', { type: blob.type });
 
-                    const newPos = start + text.length;
-                    this.$el.setSelectionRange(newPos, newPos);
+                    this.$wire.upload('image', file, () => {
+                        this.$wire.call('processImage');
+                    });
 
-                    this.onInput();
                     return;
                 }
+            }
 
-                const blob = await item.getType('image/png');
-                const file = new File([blob], 'pasted.png', { type: 'image/png' });
+            const text = e.clipboardData.getData('text/plain') || '';
+            if (text.length > 0) {
+                this.$el.value = this.$el.value.slice(0, start) + text + this.$el.value.slice(end);
 
-                this.$wire.upload('image', file, () => {
-                    this.$wire.call('processImage');
-                });
+                const newPos = start + text.length;
+                this.$el.setSelectionRange(newPos, newPos);
+
+                this.onInput();
             }
         },
 
