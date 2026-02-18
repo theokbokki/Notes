@@ -23,6 +23,8 @@
         padding: rem(10) rem(16);
         border-radius: rem(8);
         border: none;
+        width: 100%;
+        font-size: rem(16);
 
         &:hover {
             cursor: pointer;
@@ -40,6 +42,7 @@
 
     &__title {
         display: block;
+        font-size: rem(16);
 
         &--edit {
             width: 100%;
@@ -170,6 +173,12 @@
 
     strong {
         font-weight: bold;
+    }
+
+    @media screen and (min-width: rem(540)) {
+        &__button {
+            width: max-content;
+        }
     }
 
     @media screen and (min-width: rem(990)) {
