@@ -9,7 +9,7 @@ new class extends Component
     #[Computed]
     public function notes()
     {
-        return auth()->check() ? Note::all() : Note::published()->get();
+        return auth()->check() ? Note::latest()->get() : Note::published()->latest()->get();
     }
 };
 ?>
