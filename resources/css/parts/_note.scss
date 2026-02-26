@@ -17,15 +17,16 @@
 
     &__skip {
         font-size: rem(14);
-        order: 1;
         margin-bottom: rem(24);
+        order: 1;
     }
 
     &__buttons {
         display: flex;
         flex-wrap: wrap;
         gap: rem(8);
-        margin: rem(24) 0 0;
+        margin-bottom: rem(24);
+        order: 2;
     }
 
     &__button {
