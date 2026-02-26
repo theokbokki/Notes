@@ -67,6 +67,20 @@ new class extends Component
         $this->note->save();
     }
 
+    public function toggleDraft()
+    {
+        $this->note->draft = !$this->note->draft;
+
+        $this->note->save();
+    }
+
+    public function togglePinned()
+    {
+        $this->note->pinned = !$this->note->pinned;
+
+        $this->note->save();
+    }
+
     public function toggleFormat()
     {
         $this->format = !$this->format;
@@ -106,8 +120,10 @@ new class extends Component
         >{{ $title }}</textarea>
 
         <div class="note__buttons">
-            <button class="note__button" wire:click="createNote">Create Note</button>
+            <button class="note__button" wire:click="createNote">Create</button>
             <button class="note__button" wire:click="togglePublish">{{ $note->published_at === null ? 'Publish' : 'Unpublish' }}</button>
+            <button class="note__button" wire:click="toggleDraft">{{ $note->draft ? 'Undraft' : 'Draft' }}</button>
+            <button class="note__button" wire:click="togglePinned">{{ $note->pinned ? 'Unpin' : 'Pin' }}</button>
             <button class="note__button" wire:click="toggleFormat">{{ $format ? 'Show editor' : 'Show formatted' }}</button>
             <button
                 class="note__button note__button--danger"
