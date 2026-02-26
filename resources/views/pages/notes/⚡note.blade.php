@@ -96,44 +96,47 @@ new class extends Component
 ?>
 
 <div class="note">
-    <h1 class="note__title {{ when(auth()->check(), 'sro') }}">{{ $title }}</h1>
-    @auth()
-        <textarea
-            x-data="{
-                resize() {
-                    const scrollTop = window.pageYOffset;
-                    this.$el.style.height = 'auto';
-                    this.$el.style.height = this.$el.scrollHeight + 'px';
-                    window.scrollTo({ top: scrollTop });
-                },
+    <header class="note__header">
+        <h1 class="note__title {{ when(auth()->check(), 'sro') }}">{{ $title }}</h1>
+        <a href="#nav" class="note__skip">Go to notes list</a>
+        @auth()
+            <textarea
+                x-data="{
+                    resize() {
+                        const scrollTop = window.pageYOffset;
+                        this.$el.style.height = 'auto';
+                        this.$el.style.height = this.$el.scrollHeight + 'px';
+                        window.scrollTo({ top: scrollTop });
+                    },
 
-                onInput() {
-                    this.resize();
-                    $wire.$set('title', $el.value);
-                },
-            }"
-            x-init="resize()"
-            x-resize.document="resize()"
-            wire:ignore
-            @input.debounce.500ms="onInput()"
-            class="note__title note__title--edit"
-        >{{ $title }}</textarea>
+                    onInput() {
+                        this.resize();
+                        $wire.$set('title', $el.value);
+                    },
+                }"
+                x-init="resize()"
+                x-resize.document="resize()"
+                wire:ignore
+                @input.debounce.500ms="onInput()"
+                class="note__title note__title--edit"
+            >{{ $title }}</textarea>
 
-        <div class="note__buttons">
-            <button class="note__button" wire:click="createNote">Create</button>
-            <button class="note__button" wire:click="togglePublish">{{ $note->published_at === null ? 'Publish' : 'Unpublish' }}</button>
-            <button class="note__button" wire:click="toggleDraft">{{ $note->draft ? 'Undraft' : 'Draft' }}</button>
-            <button class="note__button" wire:click="togglePinned">{{ $note->pinned ? 'Unpin' : 'Pin' }}</button>
-            <button class="note__button" wire:click="toggleFormat">{{ $format ? 'Show editor' : 'Show formatted' }}</button>
-            <button
-                class="note__button note__button--danger"
-                wire:click="deleteNote"
-                @reset-delete-check.window="setTimeout(() => $wire.set('deleteCheck', false), 3000)"
-            >
-                {{ $deleteCheck ? 'You sure?' : 'Delete' }}
-            </button>
-        </div>
-    @endauth
+            <div class="note__buttons">
+                <button class="note__button" wire:click="createNote">Create</button>
+                <button class="note__button" wire:click="togglePublish">{{ $note->published_at === null ? 'Publish' : 'Unpublish' }}</button>
+                <button class="note__button" wire:click="toggleDraft">{{ $note->draft ? 'Undraft' : 'Draft' }}</button>
+                <button class="note__button" wire:click="togglePinned">{{ $note->pinned ? 'Unpin' : 'Pin' }}</button>
+                <button class="note__button" wire:click="toggleFormat">{{ $format ? 'Show editor' : 'Show formatted' }}</button>
+                <button
+                    class="note__button note__button--danger"
+                    wire:click="deleteNote"
+                    @reset-delete-check.window="setTimeout(() => $wire.set('deleteCheck', false), 3000)"
+                >
+                    {{ $deleteCheck ? 'You sure?' : 'Delete' }}
+                </button>
+            </div>
+        @endauth
+    </header>
 
     <div class="note__content">
         @if(auth()->check() && !$format)

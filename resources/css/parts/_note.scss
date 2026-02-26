@@ -10,11 +10,22 @@
     animation: day-progress-front 86400s steps(1, end) infinite;
     animation-delay: var(--offset);
 
+    &__header {
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__skip {
+        font-size: rem(14);
+        order: 1;
+        margin-bottom: rem(24);
+    }
+
     &__buttons {
         display: flex;
         flex-wrap: wrap;
         gap: rem(8);
-        margin: rem(24) 0;
+        margin: rem(24) 0 0;
     }
 
     &__button {

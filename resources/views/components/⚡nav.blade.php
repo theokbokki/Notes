@@ -30,7 +30,7 @@ new class extends Component
 };
 ?>
 
-<div>
+<div id="nav">
     <nav class="nav">
         <h2>Pinned notes</h2>
 
