@@ -15,7 +15,7 @@
                 <link>{{ route('notes.note', ['note' => $note]) }}</link>
                 <description><![CDATA[{!! str()->markdown($note->content) !!}]]></description>
                 <author>Théoo</author>
-                <guid>{{ str()->uuid() }}</guid>
+                <guid>{{ $note->id }}</guid>
             </item>
         @endforeach
     </channel>

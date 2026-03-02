@@ -10,7 +10,7 @@ new class extends Component
     public function notes()
     {
         return auth()->check()
-            ? Note::latest()->get()
+            ? Note::latest('updated_at')->get()
             : Note::published()->latest()->get();
     }
 
