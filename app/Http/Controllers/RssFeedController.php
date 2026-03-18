@@ -8,7 +8,7 @@ class RssFeedController extends Controller
 {
     public function __invoke()
     {
-        $notes = Note::latest()->published()->get();
+        $notes = Note::published()->latest('published_at')->get();
 
         return response()->view('rss', [
             'notes' => $notes

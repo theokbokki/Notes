@@ -17,10 +17,10 @@ Route::fallback(fn () => fallback());
 function fallback()
 {
     if (auth()->check()) {
-        return redirect()->route('notes.note', Note::latest()->first());
+        return redirect()->route('notes.note', Note::latest('updated_at')->first());
     }
 
-    if ($note = Note::published()->latest()->first()) {
+    if ($note = Note::published()->latest('published_at')->first()) {
         return redirect()->route('notes.note', $note);
     }
 

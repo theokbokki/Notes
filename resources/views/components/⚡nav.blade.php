@@ -11,7 +11,7 @@ new class extends Component
     {
         return auth()->check()
             ? Note::latest('updated_at')->get()
-            : Note::published()->latest()->get();
+            : Note::published()->latest('published_at')->get();
     }
 
     #[Computed]
