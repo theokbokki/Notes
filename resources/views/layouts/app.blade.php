@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" style="--offset: {{ now('Europe/Brussels')->diffInSeconds(now('Europe/Brussels')->startOfDay()) }}s">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,7 +30,7 @@
 
         @livewireStyles
     </head>
-    <body style="--offset: {{ now('Europe/Brussels')->diffInSeconds(now('Europe/Brussels')->startOfDay()) }}s">
+    <body>
         {{ $slot }}
 
         <div class="backdrop">
