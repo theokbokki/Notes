@@ -1,0 +1,133 @@
+@use "../utils" as *;
+
+.nav {
+    position: fixed;
+    bottom: rem(40);
+    left: 50%;
+    width: rem(320);
+    height: rem(45); // enough to contain closed pills
+    transform: translate3d(-50%, 0, 0);
+    font-size: rem(14);
+    font-family: var(--font-sans);
+    line-height: 150%;
+
+    &__notes {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: calc(100% - rem(48));
+        height: rem(45);
+        padding: rem(12) rem(16);
+        display: flex;
+        flex-direction: column;
+        color: rgb(var(--white));
+        background: rgb(var(--black));
+        border-radius: rem(33);
+        overflow: hidden;
+        cursor: pointer;
+
+        &--open,
+        .nav:not([data-js]) &:hover {
+            left: calc(50% - min(calc(100vw - rem(40)), rem(390)) / 2);
+            width: min(calc(100vw - rem(40)), rem(390));
+            height: auto;
+            max-height: rem(400);
+            padding: rem(24);
+            padding-bottom: 0;
+            border-radius: rem(24);
+            z-index: 2;
+
+            .nav__title {
+                overflow: unset;
+                white-space: unset;
+            }
+        }
+    }
+
+    &__more {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        width: rem(45);
+        height: rem(45);
+        padding: rem(14);
+        color: rgb(var(--white));
+        background: rgb(var(--black));
+        border-radius: rem(33);
+        overflow: hidden;
+        cursor: pointer;
+
+        &--open,
+        .nav:not([data-js]) &:hover {
+            left: calc(50% - min(calc(100vw - rem(40)), rem(390)) / 2);
+            right: auto;
+            width: min(calc(100vw - rem(40)), rem(390));
+            height: auto;
+            max-height: rem(400);
+            padding: rem(8) rem(24) 0;
+            border-radius: rem(24);
+            z-index: 2;
+
+            .nav__icon {
+                display: none;
+            }
+        }
+    }
+
+    &__icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &__header {
+        display: flex;
+        gap: rem(4);
+        padding-bottom: rem(16);
+        border-bottom: 1px solid rgba(var(--white), .25);
+
+        svg {
+            flex-shrink: 0;
+            height: rem(24);
+            width: rem(24);
+        }
+    }
+
+    &__title {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    &__main {
+        display: flex;
+        flex-direction: column;
+        gap: rem(24);
+        padding-top: rem(16);
+        padding-bottom: rem(24);
+        overflow: scroll;
+    }
+
+    &__subtitle {
+        margin-bottom: rem(8);
+        font-size: rem(12);
+        color: rgba(var(--white), .75);
+    }
+
+    &__list {
+        display: flex;
+        flex-direction: column;
+        gap: rem(8);
+    }
+
+    &__link {
+        color: white;
+        text-decoration: none;
+        transition: opacity 150ms ease-out;
+
+        &:hover {
+            opacity: 50%;
+            transition: opacity 0ms ease-out;
+        }
+    }
+}

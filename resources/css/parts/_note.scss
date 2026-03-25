@@ -3,7 +3,7 @@
 .note {
     max-width: 65ch;
     padding: 0 rem(20);
-    margin: rem(40) auto;
+    margin: rem(40) auto rem(120);
     font-size: rem(16);
     font-family: var(--font-mono);
     line-height: 175%;
@@ -195,7 +195,7 @@
     }
 
     @media screen and (min-width: rem(990)) {
-        padding: rem(80) rem(120);
+        padding: rem(80) 0;
     }
 }
 
