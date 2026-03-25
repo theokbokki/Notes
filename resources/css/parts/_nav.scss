@@ -83,6 +83,7 @@
 
     &__header {
         display: flex;
+        align-items: center;
         gap: rem(4);
         padding-bottom: rem(16);
         border-bottom: 1px solid rgba(var(--white), .25);
