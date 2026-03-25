@@ -5,20 +5,17 @@
     padding: 0 rem(20);
     margin: rem(40) auto rem(120);
     font-size: rem(16);
-    font-family: var(--font-mono);
-    line-height: 175%;
+    font-family: var(--font-serif);
+    font-weight: 600;
+    line-height: 145%;
+    letter-spacing: 4;
+    text-align: justify;
     animation: day-progress-front 86400s steps(1, end) infinite;
     animation-delay: var(--offset);
 
     &__header {
         display: flex;
         flex-direction: column;
-    }
-
-    &__skip {
-        font-size: rem(14);
-        margin-bottom: rem(24);
-        order: 1;
     }
 
     &__buttons {
@@ -61,7 +58,10 @@
             width: 100%;
             border: none;
             resize: none;
-            font-family: var(--font-mono);
+            font-family: var(--font-serif);
+            font-weight: 600;
+            line-height: 145%;
+            letter-spacing: 4;
             border: none;
             background: transparent;
             animation: day-progress-front 86400s steps(1, end) infinite;
@@ -73,6 +73,10 @@
         }
     }
 
+    &__content {
+
+    }
+
     h1,
     h2,
     h3,
@@ -80,17 +84,20 @@
     h5,
     h6 {
         margin-top: 1rem;
-        text-transform: uppercase;
     }
 
     p {
         margin-top: 1rem;
+        text-indent: rem(30) each-line;
+        word-wrap: break-word;
+        hyphens: auto;
     }
 
     a {
         animation: day-progress-front 86400s steps(1, end) infinite;
         animation-delay: var(--offset);
         text-underline-offset: 2px;
+        word-break: break-all;
 
         &:hover {
             opacity: 50%;
@@ -110,7 +117,7 @@
 
     ul,
     ol {
-        margin: 0.25rem 0 1rem;
+        margin: 1rem 0 1rem;
     }
 
     li {
@@ -200,79 +207,79 @@
 }
 
 @keyframes day-progress-front {
-    0% {
-        color: #a9acc8;
-    }
-    4% {
-        color: #babed6;
-    }
-    8% {
-        color: #d1d4e4;
-    }
-    12% {
-        color: #fafafc;
-    }
-    17% {
-        color: #1f2026;
-    }
-    21% {
-        color: #2e2c32;
-    }
-    25% {
-        color: #5e4539;
-    }
-    29% {
-        color: #5b4637;
-    }
-    33% {
-        color: #584535;
-    }
-    37% {
-        color: #5a4836;
-    }
-    42% {
-        color: #594a36;
-    }
-    46% {
-        color: #5a4d38;
-    }
-    50% {
-        color: #595038;
-    }
-    54% {
-        color: #574834;
-    }
-    58% {
-        color: #554433;
-    }
-    62% {
-        color: #4d3c2e;
-    }
-    67% {
-        color: #4a392c;
-    }
-    71% {
-        color: #43352a;
-    }
-    75% {
-        color: #3a2d24;
-    }
-    79% {
-        color: #1a1615;
-    }
-    83% {
-        color: #211e1d;
-    }
-    87% {
-        color: #f2f1f2;
-    }
-    92% {
-        color: #f4f3f4;
-    }
-    96% {
-        color: #d2d1d8;
-    }
-    100% {
-        color: #a9acc8;
-    }
+0% {
+    color: #a9acc8;
+}
+4% {
+    color: #babed6;
+}
+8% {
+    color: #d1d4e4;
+}
+12% {
+    color: #fafafc;
+}
+17% {
+    color: #1f2026;
+}
+21% {
+    color: #2e2c32;
+}
+25% {
+    color: #5e4539;
+}
+29% {
+    color: #5b4637;
+}
+33% {
+    color: #584535;
+}
+37% {
+    color: #5a4836;
+}
+42% {
+    color: #594a36;
+}
+46% {
+    color: #5a4d38;
+}
+50% {
+    color: #595038;
+}
+54% {
+    color: #574834;
+}
+58% {
+    color: #554433;
+}
+62% {
+    color: #4d3c2e;
+}
+67% {
+    color: #4a392c;
+}
+71% {
+    color: #43352a;
+}
+75% {
+    color: #3a2d24;
+}
+79% {
+    color: #1a1615;
+}
+83% {
+    color: #211e1d;
+}
+87% {
+    color: #f2f1f2;
+}
+92% {
+    color: #f4f3f4;
+}
+96% {
+    color: #d2d1d8;
+}
+100% {
+    color: #a9acc8;
+}
 }

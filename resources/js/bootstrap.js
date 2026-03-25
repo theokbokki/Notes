@@ -7,6 +7,7 @@ import { Flip } from "gsap/Flip";
 import.meta.glob([
     '../images/**',
     '../favicons/**',
+    '../fonts/**',
 ]);
 
 window.axios = axios;

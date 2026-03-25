@@ -18,7 +18,8 @@ html {
         position: absolute;
         inset: 0;
         background: url("../../images/noise.webp");
-        opacity: .025;
+        background-size: 15%;
+        opacity: .035;
     }
 
     &__window {

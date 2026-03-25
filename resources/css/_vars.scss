@@ -1,8 +1,28 @@
+@font-face {
+    font-family: 'Caecilia';
+    src: url('../fonts/CaeciliaLTPro-75Bold.woff2') format('woff2'),
+        url('../fonts/CaeciliaLTPro-75Bold.woff') format('woff'),
+        url('../fonts/CaeciliaLTPro-75Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Caecilia';
+    src: url('../fonts/CaeciliaLTPro-76BoldItalic.woff2') format('woff2'),
+        url('../fonts/CaeciliaLTPro-76BoldItalic.woff') format('woff'),
+        url('../fonts/CaeciliaLTPro-76BoldItalic.ttf') format('truetype');
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
+}
+
 :root {
     --white: 255, 255, 255;
     --black: 0, 0, 0;
 
     --font-sans: ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-    --font-serif: Georgia, Cambria, 'Times New Roman', Times, serif;
+    --font-serif: "Caecilia", Georgia, Cambria, 'Times New Roman', Times, serif;
     --font-mono: Courier, Menlo, monospace;
 }
