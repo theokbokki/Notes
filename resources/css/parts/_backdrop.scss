@@ -1,10 +1,5 @@
 @use "../utils" as *;
 
-html {
-    animation: day-progress-back 86400s linear infinite;
-    animation-delay: var(--offset);
-}
-
 .backdrop {
     position: fixed;
     min-height: 100dvh;
@@ -12,15 +7,6 @@ html {
     left: 0;
     right: 0;
     z-index: -1;
-
-    &:after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: url("../../images/noise.webp");
-        background-size: 15%;
-        opacity: .035;
-    }
 
     &__window {
         position: absolute;

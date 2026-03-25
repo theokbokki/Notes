@@ -1,3 +1,21 @@
 ::selection {
     background: yellow;
 }
+
+html {
+    animation: day-progress-back 86400s linear infinite;
+    animation-delay: var(--offset);
+    overscroll-behavior: none;
+
+    &:after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background: url("../images/noise.webp");
+        background-size: 15%;
+        opacity: .075;
+        mix-blend-mode: multiply;
+        z-index: 99;
+        pointer-events: none;
+    }
+}

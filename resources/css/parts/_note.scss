@@ -8,7 +8,8 @@
     font-family: var(--font-serif);
     font-weight: 600;
     line-height: 145%;
-    letter-spacing: 4;
+    letter-spacing: 4%;
+    filter: blur(.25px);
     text-align: justify;
     animation: day-progress-front 86400s steps(1, end) infinite;
     animation-delay: var(--offset);
@@ -98,6 +99,7 @@
         animation-delay: var(--offset);
         text-underline-offset: 2px;
         word-break: break-all;
+        hyphens: auto;
 
         &:hover {
             opacity: 50%;

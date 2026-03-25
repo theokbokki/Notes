@@ -5,7 +5,7 @@
     bottom: rem(40);
     left: 50%;
     width: rem(320);
-    height: rem(45); // enough to contain closed pills
+    height: rem(45);
     transform: translate3d(-50%, 0, 0);
     font-size: rem(14);
     font-family: var(--font-sans);
@@ -22,6 +22,7 @@
         flex-direction: column;
         color: rgb(var(--white));
         background: rgb(var(--black));
+        box-shadow: 0 0 16px -4px rgb(var(--black), .5);
         border-radius: rem(33);
         overflow: hidden;
         cursor: pointer;
@@ -53,6 +54,7 @@
         padding: rem(14);
         color: rgb(var(--white));
         background: rgb(var(--black));
+        box-shadow: 0 0 16px -4px rgb(var(--black), .5);
         border-radius: rem(33);
         overflow: hidden;
         cursor: pointer;
