@@ -18,38 +18,6 @@
         flex-direction: column;
     }
 
-    &__buttons {
-        display: flex;
-        flex-wrap: wrap;
-        gap: rem(8);
-        margin-bottom: rem(24);
-        order: 2;
-    }
-
-    &__button {
-        background: black;
-        color: white;
-        padding: rem(8) rem(12);
-        border-radius: rem(6);
-        border: none;
-        width: 100%;
-        font-size: rem(14);
-
-        &:hover {
-            cursor: pointer;
-            opacity: 75%;
-        }
-
-        &:active {
-            transform: scale(0.97);
-        }
-
-        &--danger {
-            background: red;
-            margin-left: auto;
-        }
-    }
-
     &__title {
         display: block;
         font-size: rem(16);

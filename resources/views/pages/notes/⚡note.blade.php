@@ -2,6 +2,7 @@
 
 use App\Models\Note;
 use Livewire\Component;
+use Livewire\Attributes\On;
 
 new class extends Component
 {
@@ -10,8 +11,6 @@ new class extends Component
     public string $title = '';
 
     public bool $format = false;
-
-    public bool $deleteCheck = false;
 
     public function mount()
     {
@@ -33,57 +32,10 @@ new class extends Component
         ]);
     }
 
-
-    public function createNote()
+    #[On('format-toggled')]
+    public function toggleFormat(bool $format)
     {
-        $note = Note::create([
-            'title' => 'New note',
-        ]);
-
-        unset($this->notes);
-
-        return $this->redirect(route('notes.note', ['note' => $note]), navigate: true);
-    }
-
-    public function deleteNote()
-    {
-        if (!$this->deleteCheck) {
-            $this->deleteCheck = true;
-            $this->dispatch('reset-delete-check');
-
-            return;
-        }
-
-        $this->note->delete();
-        $this->deleteCheck = false;
-    }
-
-    public function togglePublish()
-    {
-        $this->note->published_at === null
-            ? $this->note->published_at = now()
-            : $this->note->published_at = null;
-
-        $this->note->save();
-    }
-
-    public function toggleDraft()
-    {
-        $this->note->draft = !$this->note->draft;
-
-        $this->note->save();
-    }
-
-    public function togglePinned()
-    {
-        $this->note->pinned = !$this->note->pinned;
-
-        $this->note->save();
-    }
-
-    public function toggleFormat()
-    {
-        $this->format = !$this->format;
+        $this->format = $format;
     }
 
     public function render()
@@ -120,21 +72,6 @@ new class extends Component
                     @input.debounce.500ms="onInput()"
                     class="note__title note__title--edit"
                 >{{ $title }}</textarea>
-
-                <div class="note__buttons">
-                    <button class="note__button" wire:click="createNote">Create</button>
-                    <button class="note__button" wire:click="togglePublish">{{ $note->published_at === null ? 'Publish' : 'Unpublish' }}</button>
-                    <button class="note__button" wire:click="toggleDraft">{{ $note->draft ? 'Undraft' : 'Draft' }}</button>
-                    <button class="note__button" wire:click="togglePinned">{{ $note->pinned ? 'Unpin' : 'Pin' }}</button>
-                    <button class="note__button" wire:click="toggleFormat">{{ $format ? 'Show editor' : 'Show formatted' }}</button>
-                    <button
-                        class="note__button note__button--danger"
-                        wire:click="deleteNote"
-                        @reset-delete-check.window="setTimeout(() => $wire.set('deleteCheck', false), 3000)"
-                    >
-                        {{ $deleteCheck ? 'You sure?' : 'Delete' }}
-                    </button>
-                </div>
             @endauth
         </header>
 

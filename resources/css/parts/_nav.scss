@@ -35,7 +35,6 @@
             max-height: rem(400);
             padding: rem(24);
             padding-bottom: 0;
-            border-radius: rem(24);
             z-index: 2;
 
             .nav__title {
@@ -67,7 +66,6 @@
             height: auto;
             max-height: rem(400);
             padding: rem(8) rem(24) 0;
-            border-radius: rem(24);
             z-index: 2;
 
             .nav__icon {
@@ -80,6 +78,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        margin-bottom: rem(16);
     }
 
     &__header {
@@ -130,6 +129,44 @@
         &:hover {
             opacity: 50%;
             transition: opacity 0ms ease-out;
+        }
+    }
+
+    &__buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: rem(8);
+        padding-top: rem(16);
+        padding-bottom: rem(16);
+        border-bottom: 1px solid rgba(var(--white), .25);
+    }
+
+    &__button {
+        width: rem(32);
+        height: rem(32);
+        padding: rem(8);
+        background: rgba(var(--white), .25);
+        color: rgba(var(--white));
+        border-radius: 50%;
+        border: none;
+
+        &:hover {
+            cursor: pointer;
+            background: rgba(var(--white), .5);
+        }
+
+        &:active {
+            transform: scale(0.97);
+        }
+
+        &--danger {
+            color: rgba(var(--red));
+            background: rgba(var(--red), 0.25);
+            margin-left: auto;
+
+            &:hover {
+                background: rgba(var(--red), 0.5);
+            }
         }
     }
 }
