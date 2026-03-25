@@ -9,7 +9,6 @@
     font-weight: 600;
     line-height: 145%;
     letter-spacing: 4%;
-    filter: blur(.25px);
     text-align: justify;
     animation: day-progress-front 86400s steps(1, end) infinite;
     animation-delay: var(--offset);
@@ -74,10 +73,6 @@
         }
     }
 
-    &__content {
-
-    }
-
     h1,
     h2,
     h3,
@@ -107,14 +102,15 @@
     }
 
     blockquote {
-        margin: 1rem 0 0rem 4ch;
+        margin: rem(40) rem(30);
+        padding: rem(16) rem(24);
         position: relative;
-    }
+        font-style: italic;
+        border: 2px dotted rgba(var(--black), .25);
 
-    blockquote:before {
-        content: '"';
-        position: absolute;
-        left: -2ch;
+        > p:first-child {
+            text-indent: unset;
+        }
     }
 
     ul,
@@ -136,7 +132,7 @@
     }
 
     ul li::before {
-        content: "- ";
+        content: "• ";
         left: -2ch;
     }
 
@@ -160,33 +156,28 @@
     }
 
     pre {
-        margin-left: 4ch;
+        margin: rem(40) rem(30);
+        padding: rem(16) rem(24);
+        position: relative;
+        border: 2px dotted rgba(var(--black), .25);
     }
 
-    pre:before,
-    pre:after {
-        content: "---";
-        display: block;
-    }
-
-    pre code:before,
-    pre code:after {
-        content: unset;
-    }
-
-    code:before,
-    code:after {
-        content: "`";
+    code {
+        font-family: var(--font-mono);
     }
 
     hr {
-        border: none;
-    }
+        border: unset;
+        margin: rem(64) 0 rem(64);
+        text-align: center;
 
-    hr:before {
-        content: "---";
-        animation: day-progress-front 86400s steps(1, end) infinite;
-        animation-delay: var(--offset);
+        &:before {
+            content: "𖡼𖤣𖥧𖡼𓋼𖤣𖥧𓋼𓍊";
+            line-height: 175%;
+            animation: day-progress-front 86400s steps(1, end) infinite;
+            animation-delay: var(--offset);
+            opacity: .75;
+        }
     }
 
     em {
