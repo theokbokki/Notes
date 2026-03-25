@@ -6,6 +6,11 @@ html {
     animation: day-progress-back 86400s linear infinite;
     animation-delay: var(--offset);
     overscroll-behavior: none;
+    background-image: url("../images/noise.png");
+    background-blend-mode: multiply;
+    background-attachment: fixed;
+    background-size: 15%;
+
 
     &:after {
         content: "";
