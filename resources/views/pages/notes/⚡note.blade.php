@@ -10,7 +10,7 @@ new class extends Component
 
     public string $title = '';
 
-    public bool $format = false;
+    public bool $format = true;
 
     public function mount()
     {

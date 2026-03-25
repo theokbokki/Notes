@@ -10,7 +10,7 @@ new class extends Component
 
     public bool $deleteCheck = false;
 
-    public bool $format = false;
+    public bool $format = true;
 
     #[Computed]
     public function notes()
