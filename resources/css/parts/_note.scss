@@ -136,12 +136,11 @@
 
     hr {
         border: unset;
-        margin: rem(64) 0 rem(64);
         text-align: center;
 
         &:before {
             content: "𖡼𖤣𖥧𖡼𓋼𖤣𖥧𓋼𓍊";
-            line-height: 175%;
+            line-height: rem(148);
             animation: day-progress-front 86400s steps(1, end) infinite;
             animation-delay: var(--offset);
             opacity: .75;
