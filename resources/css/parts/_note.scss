@@ -140,6 +140,7 @@
 
         &:before {
             content: "𖡼𖤣𖥧𖡼𓋼𖤣𖥧𓋼𓍊";
+            display: block;
             line-height: rem(148);
             animation: day-progress-front 86400s steps(1, end) infinite;
             animation-delay: var(--offset);
