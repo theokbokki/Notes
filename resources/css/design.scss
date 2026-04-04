@@ -1,0 +1,76 @@
+@use "reset";
+@use "utils" as *;
+@use "vars";
+
+.design {
+    gap: rem(40);
+    padding: rem(20);
+    max-width: rem(1440);
+    margin: 0 auto;
+
+    &__intro {
+        flex: 1;
+        width: rem(320);
+        display: flex;
+        flex-direction: column;
+        gap: rem(16);
+    }
+
+    &__text {
+        font-family: var(--font-sans);
+        font-weight: bold;
+        line-height: 120%;
+        text-wrap: pretty;
+    }
+
+    &__link {
+        color: rgb(var(--black));
+    }
+
+    &__images {
+        display: grid;
+        gap: rem(20);
+        flex: 1;
+        margin-top: rem(40);
+    }
+
+    &__image {
+        width: 100%;
+    }
+
+    @media screen and (min-width: rem(540)) {
+        &__images {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+
+    @media screen and (min-width: rem(780)) {
+        &__intro {
+            position: fixed;
+            bottom: rem(40);
+            gap: rem(24);
+        }
+
+        &__text {
+            font-size: rem(24);
+        }
+
+        &__images {
+            margin-left: rem(380);
+            margin-top: 0;
+            grid-template-columns: unset;
+        }
+    }
+
+    @media screen and (min-width: rem(1020)) {
+        &__images {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+
+    @media screen and (min-width: rem(1200)) {
+        &__images {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+    }
+}

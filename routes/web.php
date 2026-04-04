@@ -4,6 +4,10 @@ use App\Models\Note;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RssFeedController;
 
+Route::domain(env('DESIGN_DOMAIN'))->group(function () {
+    Route::livewire('/', 'pages::design.home');
+});
+
 Route::livewire('notes/{note}', 'pages::notes.note')
     ->name('notes.note')
     ->missing(fn () => fallback());
