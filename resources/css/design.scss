@@ -36,6 +36,7 @@
 
     &__image {
         width: 100%;
+        border-radius: rem(8);
     }
 
     @media screen and (min-width: rem(540)) {
@@ -45,6 +46,8 @@
     }
 
     @media screen and (min-width: rem(780)) {
+        padding: rem(40);
+
         &__intro {
             position: fixed;
             bottom: rem(40);
