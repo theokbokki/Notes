@@ -19,7 +19,18 @@ new #[Layout('layouts::design')] class extends Component
         <div class="design__actions">
             <label class="design__toggle" for="theme">
                 <span class="sro">Toggle theme</span>
-                <input type="checkbox" name="theme" id="theme" class="sro design__theme"/>
+                <input
+                    type="checkbox"
+                    name="theme"
+                    id="theme"
+                    class="sro design__theme"
+                    x-init="$el.checked = window.matchMedia('(prefers-color-scheme: dark)').matches"
+                />
+            </label>
+
+            <label class="design__add" for="add">
+                <span class="sro">Toggle theme</span>
+                <input type="file" name="add" id="add" class="sro"/>
             </label>
         </div>
         <div class="design__intro">
@@ -32,5 +43,5 @@ new #[Layout('layouts::design')] class extends Component
         @foreach($images as $image)
             <img src="{{ $image }}" alt="" class="design__image"/>
         @endforeach
-    </di>
+    </div>
 </div>

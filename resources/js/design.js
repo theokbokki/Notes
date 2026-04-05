@@ -1,231 +1,417 @@
 import "./bootstrap";
 
-class Design {
-    constructor() {
-        this.el = document.querySelector(".design");
-        this.container = this.el.querySelector(".design__images");
+class InfiniteMasonry {
+    constructor(container, { breakpoint = 1020 } = {}) {
+        this.container = container;
+        this.breakpoint = breakpoint;
+        this.active = false;
+        this.templates = [];
+        this.slots = [];
+        this.nodePoolsByTemplate = [];
+        this.headIndex = 0;
+        this.tailIndex = 0;
+        this.columns = 1;
+        this.columnWidth = 0;
         this.gap = 8;
-        this.positions = [];
-        this.totalItems = 0;
+        this.columnBottoms = [];
         this.columnTops = [];
-        this.pool = [];
-        this.attached = new Map();
+        this.scroller = null;
+        this.startOffset = 100000;
 
-        this.waitForImages().then(() => this.init());
+        this.handleScroll = this.handleScroll.bind(this);
+        this.handleResize = this.handleResize.bind(this);
+
+        this.waitForAllImages().then(() => this.initialize());
     }
 
-    waitForImages() {
-        const images = this.el.querySelectorAll(".design__image");
+    waitForAllImages() {
+        const images = this.container.querySelectorAll("img");
 
-        return Promise.all(Array.from(images).map((img) => {
-            if (img.complete) {
+        return Promise.all(Array.from(images).map((image) => {
+            if (image.complete) {
                 return Promise.resolve();
             }
 
             return new Promise((resolve) => {
-                img.addEventListener("load", resolve, { once: true });
-                img.addEventListener("error", resolve, { once: true });
+                image.addEventListener("load", resolve, { once: true });
+                image.addEventListener("error", resolve, { once: true });
             });
         }));
     }
 
-    init() {
-        this.measureTemplates();
-        this.prepareContainer();
-        this.createSentinel();
-        this.fillToHeight(window.innerHeight * 3);
-        this.render();
-        this.listen();
+    initialize() {
+        this.originalElements = Array.from(this.container.children);
+        this.templates = this.measureTemplates();
+        this.nodePoolsByTemplate = this.templates.map(() => []);
+        this.activate();
+        window.addEventListener("resize", this.handleResize);
     }
 
     measureTemplates() {
-        const images = Array.from(this.el.querySelectorAll(".design__image"));
-
-        this.templates = images.map((img) => ({
-            src: img.src,
-            ratio: img.naturalHeight / img.naturalWidth || 1,
+        return Array.from(this.container.querySelectorAll("img")).map((image) => ({
+            source: image.src,
+            aspectRatio: image.naturalHeight / image.naturalWidth || 1,
         }));
-
-        images.forEach((img) => img.remove());
     }
 
-    prepareContainer() {
-        this.columns = this.getColumnCount();
-        this.colWidth = this.getColumnWidth();
-        this.columnTops = new Array(this.columns).fill(0);
+    preCreateNodes() {
+        const copiesPerTemplate = 20;
+
+        for (let templateIndex = 0; templateIndex < this.templates.length; templateIndex++) {
+            for (let copy = 0; copy < copiesPerTemplate; copy++) {
+                const node = document.createElement("img");
+
+                node.className = "design__image";
+                node.style.position = "absolute";
+                node.style.display = "none";
+                node.src = this.templates[templateIndex].source;
+
+                this.container.appendChild(node);
+                this.nodePoolsByTemplate[templateIndex].push(node);
+            }
+        }
+    }
+
+    activate() {
+        if (this.active) return;
+
+        this.active = true;
+        this.readLayoutFromContainer();
+        this.hideOriginalElements();
+        this.applyMasonryStyles();
+
+        if (this.isAboveBreakpoint()) {
+            this.createScrollContainer();
+            this.preCreateNodes();
+            this.buildInitialContent();
+        } else {
+            this.layoutStaticMasonry();
+            this.updateContainerHeight();
+            this.applyPositions();
+        }
+    }
+
+    buildInitialContent() {
+        const viewportHeight = this.scroller.clientHeight;
+        this.columnBottoms = new Array(this.columns).fill(this.startOffset);
+        this.columnTops = new Array(this.columns).fill(this.startOffset);
+        this.fillDownward(this.startOffset + viewportHeight * 4);
+        this.fillUpward(this.startOffset - viewportHeight * 4);
+        this.updateContainerHeight();
+        this.applyPositions();
+        this.scroller.scrollTop = this.startOffset;
+    }
+
+    readLayoutFromContainer() {
+        this.container.style.display = "";
+        this.container.style.position = "";
+        this.gap = parseFloat(getComputedStyle(this.container).gap) || 8;
+        this.columns = this.readColumnCount();
+    }
+
+    hideOriginalElements() {
+        this.originalElements.forEach((element) => (element.style.display = "none"));
+    }
+
+    applyMasonryStyles() {
         this.container.style.position = "relative";
         this.container.style.display = "block";
+        this.container.style.overflowAnchor = "none";
+        this.columnWidth = this.calculateColumnWidth();
+        this.columnBottoms = new Array(this.columns).fill(0);
+        this.columnTops = new Array(this.columns).fill(0);
     }
 
-    getColumnCount() {
-        return window
-            .getComputedStyle(this.container)
-            .getPropertyValue("grid-template-columns")
-            .split(" ").length;
+    isAboveBreakpoint() {
+        return window.innerWidth >= this.breakpoint;
     }
 
-    getColumnWidth() {
-        const width = this.container.offsetWidth;
+    createScrollContainer() {
+        if (this.scroller) return;
 
-        return (width - this.gap * (this.columns - 1)) / this.columns;
+        this.scroller = document.createElement("div");
+        this.scroller.style.cssText = "position:fixed;inset:0;overflow-y:auto;overflow-anchor:none;";
+
+        const designWrapper = this.container.closest(".design");
+        designWrapper.parentNode.insertBefore(this.scroller, designWrapper);
+
+        this.scroller.appendChild(designWrapper);
+        this.scroller.addEventListener("scroll", this.handleScroll, { passive: true });
     }
 
-    createSentinel() {
-        this.sentinel = document.createElement("div");
+    removeScrollContainer() {
+        if (!this.scroller) return;
 
-        this.sentinel.style.position = "absolute";
-        this.sentinel.style.width = "1px";
-        this.sentinel.style.height = "1px";
+        this.scroller.removeEventListener("scroll", this.handleScroll);
 
-        this.container.appendChild(this.sentinel);
+        const designWrapper = this.container.closest(".design");
+
+        this.scroller.parentNode.insertBefore(designWrapper, this.scroller);
+        this.scroller.remove();
+        this.scroller = null;
     }
 
-    fillToHeight(targetHeight) {
-        while (Math.max(...this.columnTops) < targetHeight) {
-            this.addBatch();
+    readColumnCount() {
+        const value = getComputedStyle(this.container).getPropertyValue("grid-template-columns");
+
+        if (!value || value === "none") return 1;
+
+        return value.split(" ").length;
+    }
+
+    calculateColumnWidth() {
+        return (this.container.offsetWidth - this.gap * (this.columns - 1)) / this.columns;
+    }
+
+    findShortestColumn(heights) {
+        let shortest = 0;
+
+        for (let index = 1; index < heights.length; index++) {
+            if (heights[index] < heights[shortest]) shortest = index;
         }
 
-        this.updateHeight();
+        return shortest;
     }
 
-    addBatch() {
-        this.templates.forEach((template, i) => {
-            const col = this.totalItems % this.columns;
-            const height = template.ratio * this.colWidth;
-            const x = col * (this.colWidth + this.gap);
-            const y = this.columnTops[col];
+    findTallestColumn(heights) {
+        let tallest = 0;
 
-            this.positions.push({
-                x,
-                y,
-                w: this.colWidth,
-                h: height,
-                templateIdx: i,
-            });
-
-            this.columnTops[col] = y + height + this.gap;
-
-            this.totalItems++;
-        });
-    }
-
-    updateHeight() {
-        const height = Math.max(...this.columnTops);
-
-        this.sentinel.style.transform = `translateY(${height}px)`;
-
-        this.container.style.height = `${height}px`;
-    }
-
-    listen() {
-        window.addEventListener("scroll", () => this.render());
-        window.addEventListener("resize", () => this.rebuild());
-    }
-
-    render() {
-        const viewTop = this.getViewTop();
-        const viewBottom = viewTop + window.innerHeight;
-        const buffer = window.innerHeight;
-
-        this.ensureContentFor(viewBottom + buffer * 2);
-
-        const visible = this.getVisibleIndices(
-            viewTop - buffer,
-            viewBottom + buffer,
-        );
-
-        this.detachHidden(visible);
-        this.attachVisible(visible);
-    }
-
-    getViewTop() {
-        return (this.container.offsetTop - this.container.getBoundingClientRect().top);
-    }
-
-    ensureContentFor(targetBottom) {
-        if (Math.max(...this.columnTops) < targetBottom) {
-            this.fillToHeight(targetBottom);
-        }
-    }
-
-    getVisibleIndices(top, bottom) {
-        const visible = new Set();
-
-        for (let i = 0; i < this.totalItems; i++) {
-            const pos = this.positions[i];
-
-            if (pos.y + pos.h >= top && pos.y <= bottom) {
-                visible.add(i);
-            }
+        for (let index = 1; index < heights.length; index++) {
+            if (heights[index] > heights[tallest]) tallest = index;
         }
 
-        return visible;
+        return tallest;
     }
 
-    detachHidden(visible) {
-        for (const [idx, node] of this.attached) {
-            if (!visible.has(idx)) {
-                node.style.display = "none";
-
-                this.pool.push(node);
-                this.attached.delete(idx);
-            }
-        }
+    horizontalOffsetForColumn(column) {
+        return column * (this.columnWidth + this.gap);
     }
 
-    attachVisible(visible) {
-        for (const idx of visible) {
-            if (this.attached.has(idx)) continue;
+    templateIndexFor(slotIndex) {
+        const length = this.templates.length;
 
-            const pos = this.positions[idx];
-            const node = this.getNode(pos);
-
-            node.style.display = "";
-            node.style.width = `${pos.w}px`;
-            node.style.transform = `translate(${pos.x}px, ${pos.y}px)`;
-
-            this.attached.set(idx, node);
-        }
+        return ((slotIndex % length) + length) % length;
     }
 
-    getNode(pos) {
-        let node = this.pool.pop();
+    slotHeightFor(slotIndex) {
+        return this.templates[this.templateIndexFor(slotIndex)].aspectRatio * this.columnWidth;
+    }
 
-        if (!node) {
-            node = document.createElement("img");
+    acquireNodeForTemplate(templateIndex) {
+        const pool = this.nodePoolsByTemplate[templateIndex];
+        const node = pool.pop();
 
-            node.className = "design__image";
-            node.style.position = "absolute";
+        if (!node) return null;
 
-            this.container.appendChild(node);
-        }
-
-        node.src = this.templates[pos.templateIdx].src;
+        node.style.display = "";
+        node.style.width = `${this.columnWidth}px`;
 
         return node;
     }
 
-    rebuild() {
-        this.columns = this.getColumnCount();
-        this.colWidth = this.getColumnWidth();
-        this.positions = [];
-        this.totalItems = 0;
-        this.columnTops = new Array(this.columns).fill(0);
+    releaseNodeToPool(node, templateIndex) {
+        node.style.display = "none";
 
-        this.fillToHeight(window.innerHeight * 3);
+        this.nodePoolsByTemplate[templateIndex].push(node);
+    }
 
-        for (const [, node] of this.attached) {
-            node.style.display = "none";
+    layoutStaticMasonry() {
+        for (let index = 0; index < this.templates.length; index++) {
+            const column = this.findShortestColumn(this.columnBottoms);
+            const height = this.slotHeightFor(index);
+            const verticalOffset = this.columnBottoms[column];
+            const horizontalOffset = this.horizontalOffsetForColumn(column);
+            const templateIndex = this.templateIndexFor(index);
+            const node = this.acquireNodeForTemplate(templateIndex);
 
-            this.pool.push(node);
+            if (!node) {
+                const newNode = document.createElement("img");
+
+                newNode.className = "design__image";
+                newNode.style.position = "absolute";
+                newNode.src = this.templates[templateIndex].source;
+                newNode.style.width = `${this.columnWidth}px`;
+
+                this.container.appendChild(newNode);
+                this.slots.push({ node: newNode, column, horizontalOffset, verticalOffset, height, index, templateIndex });
+            } else {
+                this.slots.push({ node, column, horizontalOffset, verticalOffset, height, index, templateIndex });
+            }
+
+            this.columnBottoms[column] = verticalOffset + height + this.gap;
+            this.tailIndex++;
+        }
+    }
+
+    fillDownward(untilVerticalOffset) {
+        while (Math.min(...this.columnBottoms) < untilVerticalOffset) {
+            const index = this.tailIndex;
+            const column = this.findShortestColumn(this.columnBottoms);
+            const height = this.slotHeightFor(index);
+            const verticalOffset = this.columnBottoms[column];
+            const horizontalOffset = this.horizontalOffsetForColumn(column);
+            const templateIndex = this.templateIndexFor(index);
+            const node = this.acquireNodeForTemplate(templateIndex);
+
+            if (!node) return;
+
+            this.slots.push({ node, column, horizontalOffset, verticalOffset, height, index, templateIndex });
+            this.columnBottoms[column] = verticalOffset + height + this.gap;
+            this.tailIndex++;
+        }
+    }
+
+    fillUpward(untilVerticalOffset) {
+        while (Math.max(...this.columnTops) > untilVerticalOffset) {
+            const nextHeadIndex = this.headIndex - 1;
+            const column = this.findTallestColumn(this.columnTops);
+            const height = this.slotHeightFor(nextHeadIndex);
+            const verticalOffset = this.columnTops[column] - this.gap - height;
+            const horizontalOffset = this.horizontalOffsetForColumn(column);
+            const templateIndex = this.templateIndexFor(nextHeadIndex);
+            const node = this.acquireNodeForTemplate(templateIndex);
+
+            if (!node) return;
+
+            this.headIndex = nextHeadIndex;
+            this.slots.unshift({ node, column, horizontalOffset, verticalOffset, height, index: this.headIndex, templateIndex });
+            this.columnTops[column] = verticalOffset;
+        }
+    }
+
+    applyPositions() {
+        for (const slot of this.slots) {
+            slot.node.style.transform = `translate(${slot.horizontalOffset}px, ${slot.verticalOffset}px)`;
+        }
+    }
+
+    updateContainerHeight() {
+        this.container.style.height = `${Math.max(...this.columnBottoms)}px`;
+    }
+
+    recalculateColumnTops() {
+        this.columnTops = new Array(this.columns).fill(Infinity);
+
+        for (const slot of this.slots) {
+            this.columnTops[slot.column] = Math.min(this.columnTops[slot.column], slot.verticalOffset);
         }
 
-        this.attached.clear();
+        for (let column = 0; column < this.columns; column++) {
+            if (this.columnTops[column] === Infinity) this.columnTops[column] = 0;
+        }
+    }
 
-        this.render();
+    recalculateColumnBottoms() {
+        this.columnBottoms = new Array(this.columns).fill(0);
+
+        for (const slot of this.slots) {
+            this.columnBottoms[slot.column] = Math.max(this.columnBottoms[slot.column], slot.verticalOffset + slot.height + this.gap);
+        }
+    }
+
+    releaseAllSlots() {
+        for (const slot of this.slots) this.releaseNodeToPool(slot.node, slot.templateIndex);
+
+        this.slots = [];
+        this.headIndex = 0;
+        this.tailIndex = 0;
+    }
+
+    resetToMiddle() {
+        this.releaseAllSlots();
+
+        this.columnBottoms = new Array(this.columns).fill(0);
+        this.columnTops = new Array(this.columns).fill(0);
+
+        this.buildInitialContent();
+    }
+
+    handleScroll() {
+        if (!this.isAboveBreakpoint() || !this.scroller) return;
+
+        const scrollTop = this.scroller.scrollTop;
+        const containerTop = this.container.offsetTop;
+        const viewportHeight = this.scroller.clientHeight;
+        const viewTop = scrollTop - containerTop;
+        const viewBottom = viewTop + viewportHeight;
+        const recycleBuffer = viewportHeight * 5;
+        const growBuffer = viewportHeight * 3;
+
+        this.recycleFromTop(viewTop, recycleBuffer);
+        this.recycleFromBottom(viewBottom, recycleBuffer);
+
+        const contentBottom = Math.max(...this.columnBottoms);
+
+        if (viewBottom + growBuffer > contentBottom) {
+            this.fillDownward(viewBottom + growBuffer * 2);
+            this.updateContainerHeight();
+            this.applyPositions();
+        }
+
+        const contentTop = Math.min(...this.columnTops);
+
+        if (viewTop - growBuffer < contentTop) {
+            this.fillUpward(viewTop - growBuffer * 2);
+            this.applyPositions();
+        }
+
+        if (Math.min(...this.columnTops) < 0) {
+            this.resetToMiddle();
+        }
+    }
+
+    recycleFromTop(viewTop, buffer) {
+        while (this.slots.length > this.templates.length) {
+            const slot = this.slots[0];
+
+            if (slot.verticalOffset + slot.height < viewTop - buffer) {
+                this.releaseNodeToPool(slot.node, slot.templateIndex);
+                this.slots.shift();
+                this.headIndex++;
+            } else {
+                break;
+            }
+        }
+
+        this.recalculateColumnTops();
+    }
+
+    recycleFromBottom(viewBottom, buffer) {
+        while (this.slots.length > this.templates.length) {
+            const slot = this.slots[this.slots.length - 1];
+
+            if (slot.verticalOffset > viewBottom + buffer) {
+                this.releaseNodeToPool(slot.node, slot.templateIndex);
+                this.slots.pop();
+                this.tailIndex--;
+            } else {
+                break;
+            }
+        }
+
+        this.recalculateColumnBottoms();
+        this.updateContainerHeight();
+    }
+
+    handleResize() {
+        const hadScrollContainer = !!this.scroller;
+
+        this.releaseAllSlots();
+        this.active = false;
+
+        if (!this.isAboveBreakpoint() && hadScrollContainer) {
+            this.removeScrollContainer();
+        }
+
+        this.originalElements.forEach((element) => (element.style.display = ""));
+        this.container.style.position = "";
+        this.container.style.display = "";
+        this.container.style.height = "";
+        this.activate();
     }
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-    new Design();
+    const container = document.querySelector(".design__images");
+    if (container) new InfiniteMasonry(container);
 });
