@@ -2,13 +2,34 @@
 
 use Livewire\Component;
 use Livewire\Attributes\Layout;
+use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\ImageManager;
 
 new #[Layout('layouts::design')] class extends Component
 {
+    use WithFileUploads;
+
     public array $images;
+
+    public $image = null;
 
     public function mount()
     {
+        $this->images = Arr::shuffle(Storage::disk('public')->files('design'));
+    }
+
+    public function updatedImage()
+    {
+        $filename = Str::uuid().'.webp';
+        File::ensureDirectoryExists(Storage::disk('public')->path('design'));
+        $path = Storage::disk('public')->path('design/'.$filename);
+
+        $manager = ImageManager::gd();
+        $image = $manager->read($this->image->getRealPath());
+        $image->scale(width: 1080)->encodeByExtension('webp', 85)->save($path);
+
         $this->images = Arr::shuffle(Storage::disk('public')->files('design'));
     }
 };
@@ -30,7 +51,7 @@ new #[Layout('layouts::design')] class extends Component
 
             <label class="design__add" for="add">
                 <span class="sro">Toggle theme</span>
-                <input type="file" name="add" id="add" class="sro"/>
+                <input type="file" name="add" id="add" class="sro" wire:model="image" />
             </label>
         </div>
         <div class="design__intro">
@@ -45,3 +66,9 @@ new #[Layout('layouts::design')] class extends Component
         @endforeach
     </div>
 </div>
+
+<script>
+    Livewire.hook('morph.updated', () => {
+        window.location.reload();
+    });
+</script>
