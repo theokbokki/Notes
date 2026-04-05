@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <title>{{ $title ?? config('app.name') }}</title>
+        <title>Théoo's designs</title>
 
         <link rel="apple-touch-icon" sizes="57x57" href="{{ Vite::asset('resources/favicons/apple-icon-57x57.png') }}">
         <link rel="apple-touch-icon" sizes="60x60" href="{{ Vite::asset('resources/favicons/apple-icon-60x60.png') }}">
@@ -24,7 +24,6 @@
         <meta name="msapplication-TileColor" content="#ffffff">
         <meta name="msapplication-TileImage" content="{{ Vite::asset('resources/favicons/ms-icon-144x144.png') }}">
         <meta name="theme-color" content="#ffffff">
-
 
         @vite(['resources/css/design.scss', 'resources/js/design.js'])
 
