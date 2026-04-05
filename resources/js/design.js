@@ -17,6 +17,7 @@ class InfiniteMasonry {
         this.columnTops = [];
         this.scroller = null;
         this.startOffset = 100000;
+        this.wasAboveBreakpoint = false;
 
         this.handleScroll = this.handleScroll.bind(this);
         this.handleResize = this.handleResize.bind(this);
@@ -43,6 +44,7 @@ class InfiniteMasonry {
         this.originalElements = Array.from(this.container.children);
         this.templates = this.measureTemplates();
         this.nodePoolsByTemplate = this.templates.map(() => []);
+        this.wasAboveBreakpoint = this.isAboveBreakpoint();
         this.activate();
         window.addEventListener("resize", this.handleResize);
     }
@@ -394,12 +396,21 @@ class InfiniteMasonry {
     }
 
     handleResize() {
+        const isAboveBreakpoint = this.isAboveBreakpoint();
+        const crossedBreakpoint = isAboveBreakpoint !== this.wasAboveBreakpoint;
+        const newColumnCount = this.readColumnCount();
+        const columnCountChanged = newColumnCount !== this.columns;
+
+        if (!crossedBreakpoint && !columnCountChanged) return;
+
+        this.wasAboveBreakpoint = isAboveBreakpoint;
+
         const hadScrollContainer = !!this.scroller;
 
         this.releaseAllSlots();
         this.active = false;
 
-        if (!this.isAboveBreakpoint() && hadScrollContainer) {
+        if (!isAboveBreakpoint && hadScrollContainer) {
             this.removeScrollContainer();
         }
 
