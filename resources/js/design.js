@@ -4,7 +4,7 @@ class Design {
     constructor() {
         this.el = document.querySelector(".design");
         this.container = this.el.querySelector(".design__images");
-        this.gap = 20;
+        this.gap = 8;
         this.positions = [];
         this.totalItems = 0;
         this.columnTops = [];
