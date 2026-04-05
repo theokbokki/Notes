@@ -64,7 +64,7 @@ new #[Layout('layouts::design')] class extends Component
     </div>
     <div class="design__images">
         @foreach($images as $image)
-            <img src="{{ $image }}" alt="" class="design__image"/>
+            <img src="/storage/{{ $image }}" alt="" class="design__image"/>
         @endforeach
     </div>
 </div>
