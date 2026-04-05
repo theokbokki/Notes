@@ -10,7 +10,6 @@ class Design {
         this.columnTops = [];
         this.pool = [];
         this.attached = new Map();
-        this.resizeTimer = null;
 
         this.waitForImages().then(() => this.init());
     }
@@ -120,13 +119,7 @@ class Design {
 
     listen() {
         window.addEventListener("scroll", () => this.render());
-        window.addEventListener("resize", () => this.debouncedRebuild());
-    }
-
-    debouncedRebuild() {
-        clearTimeout(this.resizeTimer);
-
-        this.resizeTimer = setTimeout(() => this.rebuild(), 150);
+        window.addEventListener("resize", () => this.rebuild());
     }
 
     render() {

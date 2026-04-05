@@ -15,10 +15,18 @@ new #[Layout('layouts::design')] class extends Component
 ?>
 
 <div class="design">
-    <div class="design__intro">
-        <p class="design__text">Hey, I’m Théo and I like mixing graphic design with politics to give my opinions on the world and hopefully make it a better place</p>
-        <p class="design__text">You can talk to me at <a href="mailto:hello@theoo.dev" class="design__link">hello@theoo.dev</a></p>
-        <p class="design__text">I hope you have a wonderful day</p>
+    <div class="design__sidebar">
+        <div class="design__actions">
+            <label class="design__toggle" for="theme">
+                <span class="sro">Toggle theme</span>
+                <input type="checkbox" name="theme" id="theme" class="sro design__theme"/>
+            </label>
+        </div>
+        <div class="design__intro">
+            <p class="design__text">Hey, I’m Théo and I like mixing graphic design with politics to give my opinions on the world and hopefully make it a better place</p>
+            <p class="design__text">You can talk to me at <a href="mailto:hello@theoo.dev" class="design__link">hello@theoo.dev</a></p>
+            <p class="design__text">I hope you have a wonderful day</p>
+        </div>
     </div>
     <div class="design__images">
         @foreach($images as $image)
