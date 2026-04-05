@@ -49,10 +49,12 @@ new #[Layout('layouts::design')] class extends Component
                 />
             </label>
 
-            <label class="design__add" for="add">
-                <span class="sro">Toggle theme</span>
-                <input type="file" name="add" id="add" class="sro" wire:model="image" />
-            </label>
+            @auth()
+                <label class="design__add" for="add">
+                    <span class="sro">Toggle theme</span>
+                    <input type="file" name="add" id="add" class="sro" wire:model="image" />
+                </label>
+            @endauth
         </div>
         <div class="design__intro">
             <p class="design__text">Hey, I’m Théo and I like mixing graphic design with politics to give my opinions on the world and hopefully make it a better place</p>
